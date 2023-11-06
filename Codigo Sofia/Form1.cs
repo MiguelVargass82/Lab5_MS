@@ -52,9 +52,10 @@ namespace Candy
 
 
                     matPictureBox[i, j] = pictureAux;   //Creamos una matriz de objetos PictureBox de cada pictureAux
-
+                    
                     //Mostrar en form
                     Controls.Add(pictureAux);
+                    pictureAux.BringToFront();
                     x += 50;
                 }
                 y += 50;
@@ -78,6 +79,8 @@ namespace Candy
         private void button1_Click(object sender, EventArgs e)
         {
             pintarTablero();
+
+           
         }
 
         private Image seleccionarRecursoCaramelo(int recurso)
@@ -97,6 +100,13 @@ namespace Candy
                 default:
                     return global::Candy.Properties.Resources._5;
             }
+        }
+
+
+        // doble click en el forms xd
+        private void button3_Click(object sender, EventArgs e)
+        {
+            //buttom 3 es f0c1
         }
     }
 }
