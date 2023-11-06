@@ -18,28 +18,41 @@ namespace Candy
             //Método generado automaticamente
             InitializeComponent();
             //Mi objeto tablero
-            tab = new Tablero(8, 8, 6);
+
+            tab = new Tablero(8, 8, 6);     //tablero 8x8 de 6 tipos de caramelos
             
         }
 
         public void pintarTablero()
         {
-            //Matriz de imágenes
+            //Matriz de tipo imágenes de la misma cantidad de filas y columnas
             PictureBox[,] matPictureBox = new PictureBox[tab.cantidadFil, tab.cantidadCol];
             
+
+            //ASIGNACION DE OBJETOS DE PictureBox llamados PictureAux en la matriz matPictureBox
             int y = 25;
             for (int i = 0; i < tab.cantidadFil; i++)
             {
                 int x = 25;
                 for (int j = 0; j < tab.cantidadCol; j++)
                 {
-                    PictureBox pictureAux = new PictureBox();
-                    pictureAux.Image = seleccionarRecursoCaramelo(tab.valores[i,j]);
-                    pictureAux.Location = new System.Drawing.Point(x, y);
-                    pictureAux.Name = $"pictureBox{i}{j}";
-                    pictureAux.Size = new System.Drawing.Size(50, 50);
+                    PictureBox pictureAux = new PictureBox(); //Creamos un objeto picturebox
+
+                    pictureAux.Image = seleccionarRecursoCaramelo(tab.valores[i,j]);    // Funcion de mas abajo
+                                                                                        // cada objeto tab es un tablero con numeros aleatorios del 0 al numero de caramelos
+
+
+                    pictureAux.Location = new System.Drawing.Point(x, y);   //Esto determina en que posicion se va a mostrar cada imagen
+
+                    pictureAux.Name = $"pictureBox{i}{j}";  //A ese objeto tipo pictureBox de la matriz de vamos a asignar ese nombre
+
+                    pictureAux.Size = new System.Drawing.Size(50, 50);  //Tamaño de cada imagen
+
                     pictureAux.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-                    matPictureBox[i, j] = pictureAux;
+
+
+                    matPictureBox[i, j] = pictureAux;   //Creamos una matriz de objetos PictureBox de cada pictureAux
+
                     //Mostrar en form
                     Controls.Add(pictureAux);
                     x += 50;
@@ -56,7 +69,7 @@ namespace Candy
 
         private Image seleccionarRecursoCaramelo(int recurso)
         {
-            switch(recurso)
+            switch(recurso)     //Lo que hace es asignarle por cada numero una imagen
             {
                 case 0:
                     return global::Candy.Properties.Resources._0;
