@@ -60,6 +60,17 @@ namespace Candy
                 y += 50;
             }          
 
+            //-----NOTAS DE MIGUEL--------
+            //Si queremos acceder a la matriz de numeros entonces vamos usar tab.valores y a la matriz de imagenes vamos a usar MatPictureBox
+            //Dos funciones (1) Tres en linea horizontal y tres en linea vertical 
+            //Podriamos usar incluso que las ileras que se borren agarramos las cordenadas en x que serian fijas y asignariamos...
+            //...los valores en "y" 1 inmediatamente si el 3 en linea fue horizontal y 3 si fue verticcal, ahora los valores vacios de arriba...
+            //..les asignamos un valor aleatorio
+
+
+
+
+
         }
 
         private void button1_Click(object sender, EventArgs e)
