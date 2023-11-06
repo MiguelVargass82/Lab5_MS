@@ -62,11 +62,13 @@ namespace Candy
 
             //-----NOTAS DE MIGUEL--------
             //Si queremos acceder a la matriz de numeros entonces vamos usar tab.valores y a la matriz de imagenes vamos a usar MatPictureBox
+
             //Dos funciones (1) Tres en linea horizontal y tres en linea vertical 
             //Podriamos usar incluso que las ileras que se borren agarramos las cordenadas en x que serian fijas y asignariamos...
             //...los valores en "y" 1 inmediatamente si el 3 en linea fue horizontal y 3 si fue verticcal, ahora los valores vacios de arriba...
             //..les asignamos un valor aleatorio
 
+            //Tendriamos una matriz fija de 8x8, donde usariamos 64 botones cada uno asignado a una coodenada, la cual se encargara de evaluar arriba, abajo, izquierda, derecha
 
 
 
