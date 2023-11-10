@@ -13,6 +13,7 @@ namespace Candy
     public partial class Form1 : Form
     {
         Tablero tab;    //Iniciamos una variable de clase tablero tablero
+        Button[,] matrizBotones; 
         public Form1()
         {
             //Método generado automaticamente
@@ -55,11 +56,18 @@ namespace Candy
                     
                     //Mostrar en form
                     Controls.Add(pictureAux);
-                    pictureAux.BringToFront();
+                    
                     x += 50;
+                   
                 }
                 y += 50;
             }          
+
+           
+
+
+
+
 
             //-----NOTAS DE MIGUEL--------
             //Si queremos acceder a la matriz de numeros entonces vamos usar tab.valores y a la matriz de imagenes vamos a usar MatPictureBox
@@ -103,6 +111,66 @@ namespace Candy
         }
 
 
+     
+
+        private void f0c1_MouseClick(object sender, MouseEventArgs e)
+        {
+            MessageBox.Show("si sirve pa");
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            int filas = 8; // Número de filas en la matriz
+            int columnas = 8; // Número de columnas en la matriz
+
+            // Inicializa la matriz de botones
+            matrizBotones = new Button[filas, columnas];
+
+            // Configura el TableLayoutPanel
+            matrizBform.RowCount = filas;
+            matrizBform.ColumnCount = columnas;
+
+            // Llena la matriz de botones y agrégala al TableLayoutPanel
+            for (int i = 0; i < filas; i++)
+            {
+                for (int j = 0; j < columnas; j++)
+                {
+                    Button btn = new Button();
+                    btn.FlatStyle = FlatStyle.Flat;
+                    btn.Size = new Size(45, 45);
+                    btn.BackColor = Color.Transparent;
+                    btn.Text = $"Boton {i + 1}-{j + 1}";
+                    int caramelo = tab.valores[i, j];
+                    btn.BackgroundImage = seleccionarRecursoCaramelo(caramelo);
+                    btn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+                    matrizBotones[i, j] = btn;
+
+                    // Asocia un evento al botón si es necesario
+                    btn.Click += Boton_Click;
+
+                    // Agrega el botón al TableLayoutPanel
+                    matrizBform.Controls.Add(btn, j, i);
+                }
+            }
+
+        }
+        private void Boton_Click(object sender, EventArgs e)
+        {
+            // Manejar el evento de clic del botón si es necesario
+            MessageBox.Show("lo logramos viejo");
+        }
+
+
+        /*
+         * this.button2.BackgroundImage = global::Candy.Properties.Resources._0;
+           this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+         * */
+
+        //doble click
+        private void matrizBform_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
         // doble click en el forms xd
         private void button3_Click(object sender, EventArgs e)
         {
