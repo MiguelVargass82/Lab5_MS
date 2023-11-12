@@ -13,7 +13,12 @@ namespace Candy
     public partial class Form1 : Form
     {
         Tablero tab;    //Iniciamos una variable de clase tablero tablero
-        Button[,] matrizBotones; 
+        Button[,] matrizBotones;
+
+        int[,] matrizPosiciones = new int[5,2];    //Matriz grande de maximo 5 coordenadas para verificar, cada coordenada x es un par
+
+
+
         public Form1()
         {
             //Método generado automaticamente
@@ -84,14 +89,18 @@ namespace Candy
 
         }
 
+
+
+
         private void button1_Click(object sender, EventArgs e)
         {
-            pintarTablero();
-
-           
+            pintarTablero();      
         }
 
-        private Image seleccionarRecursoCaramelo(int recurso)
+
+
+
+        private Image seleccionarRecursoCaramelo(int recurso)   //Retorna imagenes
         {
             switch(recurso)     //Lo que hace es asignarle por cada numero una imagen
             {
@@ -135,36 +144,131 @@ namespace Candy
             {
                 for (int j = 0; j < columnas; j++)
                 {
-                    Button btn = new Button();
+                    //Logica para la asignacion de las imagenes a los botones
+
+                    Button btn = new Button();      //Creamos un boton que sera parte de la matriz
                     btn.FlatStyle = FlatStyle.Flat;
                     btn.Size = new Size(45, 45);
                     btn.BackColor = Color.Transparent;
-                    btn.Text = $"Boton {i + 1}-{j + 1}";
-                    int caramelo = tab.valores[i, j];
-                    btn.BackgroundImage = seleccionarRecursoCaramelo(caramelo);
+                    btn.Text = $"Boton {i }-{j}";
+                    int caramelo = tab.valores[i, j];   //Sacamos el numero de la matriz de numeros que pertenece a la posicion del boton
+
+                    btn.Tag = new Tuple<int, int>(i, j);    //En la propiedad tag del boton alcamacena las coordenadas
+
+                    btn.BackgroundImage = seleccionarRecursoCaramelo(caramelo); //Le asociamos una imagen al boton
+
                     btn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-                    matrizBotones[i, j] = btn;
+
+                    matrizBotones[i, j] = btn;  //metemos en boton en la matriz
 
                     // Asocia un evento al botón si es necesario
-                    btn.Click += Boton_Click;
-
+                   // btn.Click += Boton_Click;
+                    btn.Click += (senderBtn, eBtn) => Boton_Click(senderBtn, eBtn, i, j);
                     // Agrega el botón al TableLayoutPanel
                     matrizBform.Controls.Add(btn, j, i);
                 }
             }
-
         }
-        private void Boton_Click(object sender, EventArgs e)
+
+        int numbtn = 0; //Numero de botones a verificar
+
+        int PosicionX = 0;
+        int PosicionY = 0;  //Posicion X y Y  para la matriz de coordenadas
+        private void Boton_Click(object sender, EventArgs e, int fila, int columna)    //Evento de cualquier boton de la matriz
         {
-            // Manejar el evento de clic del botón si es necesario
-            MessageBox.Show("lo logramos viejo");
+
+                         
+            if (sender is Button clickedButton)
+            {
+             
+
+                
+
+              //  MessageBox.Show($"Se hizo clic en el botón en la fila {filaa + 1}, columna {columnaa + 1}.");
+
+                if (numbtn < 5)  
+                {
+                    // Obtiene la posición desde el Tag del botón
+                    Tuple<int, int> posicion = (Tuple<int, int>)clickedButton.Tag;
+                    int filaa = posicion.Item1;
+                    int columnaa = posicion.Item2;      //En la variable filaaa y columnaaa se almacenan las coordenadas
+
+
+
+
+                    matrizPosiciones[numbtn, 0] = filaa;      //Asignacion de coordenadas en la matriz de posiciones
+                    matrizPosiciones[numbtn, 1] = columnaa;
+
+                    numbtn = numbtn + 1;
+                }
+                
+                else  //Caso en que los botones seleccionados sean menor a 3 o mayor a 5
+                {
+                   
+                  
+                        MessageBox.Show("No puede haber mas de 5 caramelos seleccionados");
+                                  
+                }
+
+
+            }
         }
 
 
-        /*
-         * this.button2.BackgroundImage = global::Candy.Properties.Resources._0;
-           this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-         * */
+        private void VerificarButtom_Click(object sender, EventArgs e)  //Evento de BOTON VERIFICAR
+        {
+            int[] vectorNumeros = new int[numbtn];      //Este vector almacena todos los numeros de las coordenadas seleccionadas para comparar si son iguales yv er si hay 3 en linea
+
+            for (int i =0; i<numbtn; i++)   //Este ciclo se encaragara de comporbar que las coordenadas en en tablero de numeros sean las mismas
+            {           
+                    int coordenadax = matrizPosiciones[i, 0];
+                    int coordenaday = matrizPosiciones[i, 1];
+
+                vectorNumeros[i] = tab.valores[coordenadax,coordenaday];
+
+                //  MessageBox.Show($"coordenada X y Y del boton seleccionado son {coordenadax} y {coordenaday}"); verificador de que ya recolectamos las coordenadas
+
+
+
+                MessageBox.Show($"En la matriz de numeros es {vectorNumeros[i]}");
+            }
+
+
+
+
+
+
+            numbtn=0;   //Volvemos cero este contador para que vuelva a contar las varibles
+
+   //         for (int i = 0; i<4; i++)   //La matriz se llena de ceros
+     //       {
+       //         for (int j = 0; i<1; j++)
+         //       {
+           //         matrizPosiciones[i,j]= 0;
+             //   }
+           // }
+            
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         //doble click
         private void matrizBform_Paint(object sender, PaintEventArgs e)
@@ -176,5 +280,7 @@ namespace Candy
         {
             //buttom 3 es f0c1
         }
+
+     
     }
 }
