@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -217,7 +218,7 @@ namespace Candy
 
         private void VerificarButtom_Click(object sender, EventArgs e)  //Evento de BOTON VERIFICAR
         {
-            int[] vectorNumeros = new int[numbtn];      //Este vector almacena todos los numeros de las coordenadas seleccionadas para comparar si son iguales yv er si hay 3 en linea
+            int[] vectorNumeros = new int[numbtn];      //Este vector almacena todos los numeros de las coordenadas seleccionadas para comparar si son iguales y ver si hay 3 en linea
 
             for (int i =0; i<numbtn; i++)   //Este ciclo se encaragara de comporbar que las coordenadas en en tablero de numeros sean las mismas
             {           
@@ -228,31 +229,168 @@ namespace Candy
 
                 //  MessageBox.Show($"coordenada X y Y del boton seleccionado son {coordenadax} y {coordenaday}"); verificador de que ya recolectamos las coordenadas
 
-
-
                 MessageBox.Show($"En la matriz de numeros es {vectorNumeros[i]}");
             }
 
+            bool linea = EnLinea(Horientacion(matrizPosiciones),matrizPosiciones,vectorNumeros);
+            if (linea)
+            {
+                MessageBox.Show("Si hay 3 en linea");
+            }
+            else
+            {
+                MessageBox.Show("No hay 3 en linea");
+            }
 
-
-
-
-
-            numbtn=0;   //Volvemos cero este contador para que vuelva a contar las varibles
-
-   //         for (int i = 0; i<4; i++)   //La matriz se llena de ceros
-     //       {
-       //         for (int j = 0; i<1; j++)
-         //       {
-           //         matrizPosiciones[i,j]= 0;
-             //   }
-           // }
             
+
+            numbtn =0;   //Volvemos cero este contador para que vuelva a contar las varibles          
+        }//Fin evento VERIFICAR
+
+        private void buttonSALIR_Click(object sender, EventArgs e)  //SALIR 
+        {
+            this.Close();
         }
 
 
 
 
+        public bool Horientacion(int[,] matPos) //Esta funcion me dira si el 3 en linea es horizontal o vertical
+        {
+            if (matPos[0,0] == matPos[1,0]) //con que 2 bootnes coicidan en posiciones principales o no podemos determinar si es vertical o horizontal
+            {
+                return true;    
+            }
+            else
+            { 
+                return false;
+            }
+        }   //retorna True si es horizontal y False si es vertical
+
+
+        public bool EnLinea(bool horientacion, int[,] matPos, int[] valores)
+        {
+            bool comprobacion = true;
+
+            //Comprobamos si todos estan en la misma horientacion
+            if (horientacion)   //Si es horizontal
+            {
+                int valorBase = matPos[0, 0];
+                for (int i = 0; i < valores.Length; i++)
+                {
+                    if (matPos[i, 0] != valorBase)   //caso donde haya un valor que no este en esa fila
+                    {
+                        comprobacion = false;
+                        MessageBox.Show($"Valor base {valorBase} y valor malo es {matPos[i, 0]}");
+                        MessageBox.Show("Hay uno que no esta en la misma fila horizontal");
+
+                    }
+                }
+            }
+            else //Si es vertical
+            {
+                int valorBase = matPos[0, 1];
+                for (int i = 0; i < valores.Length; i++)
+                {
+                    if (matPos[i, 1] != valorBase)   //caso donde haya un valor que no este en esa fila
+                    {
+                        comprobacion = false;
+
+                        MessageBox.Show("Hay uno que no esta en la misma fila vertical");
+
+                    }
+                }
+            }
+
+            if(!comprobacion) //caso donde no esten todos en la misma horientacion por ende no es 3 en linea
+            {
+                MessageBox.Show("La primera comprobacion es falsa");
+                return false;
+                
+            }
+
+            else //caso donde esten todos en la misma horientacion
+            {
+                bool comprobacion2 = true;
+                //Vamos a comprobar que todos los valores sean del mismo tipo para ejecutar el tres en linea
+                for (int valor=0;  valor < valores.Length-1; valor++)
+                {
+                    if (valores[valor] != valores[valor + 1])
+                    {
+                        comprobacion2= false;
+                     
+                    }
+                }
+
+                if (!comprobacion2) //Caso hay un valor que no es igual
+                {
+                    MessageBox.Show(" Hay un valor diferente en la matriz de numeros");
+                    return false;
+
+                }
+
+                else //Caso en que todos los valores son iguales
+                {
+
+                    //Ahora vamos a verificar que todos esten pegados
+
+                    bool comprobacion3 = true;
+
+                    if (horientacion)   //caso horizontal
+                    {
+                        int[] vectCor = new int[valores.Length];
+                        for (int i = 0;i < vectCor.Length; i++)
+                        {
+                            vectCor[i] = matPos[i, 1];  //vectCor va a tener el valor de la coordenada Y de la matriz de posiciones...
+                        }                               //...osea de la coordenada que varia sabiendo que estan en la misma fila
+
+                        Array.Sort(vectCor);
+
+                        
+                        for (int valor = 0; valor < valores.Length - 1; valor++)
+                        {
+                            if ((vectCor[valor+1] - vectCor[valor])!=1)
+                            {
+                                MessageBox.Show($"{vectCor[valor + 1]}-{vectCor[valor]}");
+                                comprobacion3 = false;
+                            }
+                        }
+                    }
+
+                    else //vertical
+                    {
+                        int[] vectCor = new int[valores.Length];
+                        for (int i = 0; i < vectCor.Length; i++)
+                        {
+                            vectCor[i] = matPos[i, 0];  //vectCor va a tener el valor de la coordenada Y de la matriz de posiciones...
+                        }                               //...osea de la coordenada que varia sabiendo que estan en la misma fila
+
+                        Array.Sort(vectCor);
+
+                       
+                        for (int valor = 0; valor < valores.Length - 1; valor++)
+                        {
+                            if ((vectCor[valor+1] - vectCor[valor]) != 1)
+                            {
+                               
+                                comprobacion3 = false;
+                            }
+                        }
+                    }
+
+                    if (comprobacion3)  //Caso en que si se cumplieron todas las condiciones anteriores por ende es 3 en linea
+                    {
+                        MessageBox.Show("Estan pegados");
+                        return true;
+                    }
+                    else
+                    {
+                        MessageBox.Show("No estan pegados");
+                        return false;
+                    }
+                }
+            }
+        }   //Fin3enLinea
 
 
 
@@ -266,21 +404,15 @@ namespace Candy
 
 
 
-
-
-
-
-        //doble click
+        /////////////////////---EVENTOS ACCIDENTALES------/////////////////////////////      
         private void matrizBform_Paint(object sender, PaintEventArgs e)
         {
-
         }
         // doble click en el forms xd
         private void button3_Click(object sender, EventArgs e)
-        {
-            //buttom 3 es f0c1
+        {          
         }
+        /////////////////////////////////////////////////////////////////////////
 
-     
     }
 }
