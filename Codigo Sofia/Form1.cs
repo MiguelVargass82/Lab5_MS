@@ -29,76 +29,19 @@ namespace Candy
             tab = new Tablero(8, 8, 6);     //tablero 8x8 de 6 tipos de caramelos
             
         }
+       
 
-        public void pintarTablero()
-        {
-            //Matriz de tipo imágenes de la misma cantidad de filas y columnas
-            PictureBox[,] matPictureBox = new PictureBox[tab.cantidadFil, tab.cantidadCol];
+        //-----NOTAS DE MIGUEL--------
+        //Si queremos acceder a la matriz de numeros entonces vamos usar tab.valores y a la matriz de imagenes vamos a usar MatPictureBox
+
+        //Dos funciones (1) Tres en linea horizontal y tres en linea vertical 
+        //Podriamos usar incluso que las ileras que se borren agarramos las cordenadas en x que serian fijas y asignariamos...
+        //...los valores en "y" 1 inmediatamente si el 3 en linea fue horizontal y 3 si fue verticcal, ahora los valores vacios de arriba...
+        //..les asignamos un valor aleatorio
+
+        //Tendriamos una matriz fija de 8x8, donde usariamos 64 botones cada uno asignado a una coodenada, la cual se encargara de evaluar arriba, abajo, izquierda, derecha
+
             
-
-            //ASIGNACION DE OBJETOS DE PictureBox llamados PictureAux en la matriz matPictureBox
-            int y = 25;
-            for (int i = 0; i < tab.cantidadFil; i++)
-            {
-                int x = 25;
-                for (int j = 0; j < tab.cantidadCol; j++)
-                {
-                    PictureBox pictureAux = new PictureBox(); //Creamos un objeto picturebox
-
-                    pictureAux.Image = seleccionarRecursoCaramelo(tab.valores[i,j]);    // Funcion de mas abajo
-                                                                                        // cada objeto tab es un tablero con numeros aleatorios del 0 al numero de caramelos
-
-
-                    pictureAux.Location = new System.Drawing.Point(x, y);   //Esto determina en que posicion se va a mostrar cada imagen
-
-                    pictureAux.Name = $"pictureBox{i}{j}";  //A ese objeto tipo pictureBox de la matriz de vamos a asignar ese nombre
-
-                    pictureAux.Size = new System.Drawing.Size(50, 50);  //Tamaño de cada imagen
-
-                    pictureAux.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-
-
-                    matPictureBox[i, j] = pictureAux;   //Creamos una matriz de objetos PictureBox de cada pictureAux
-                    
-                    //Mostrar en form
-                    Controls.Add(pictureAux);
-                    
-                    x += 50;
-                   
-                }
-                y += 50;
-            }          
-
-           
-
-
-
-
-
-            //-----NOTAS DE MIGUEL--------
-            //Si queremos acceder a la matriz de numeros entonces vamos usar tab.valores y a la matriz de imagenes vamos a usar MatPictureBox
-
-            //Dos funciones (1) Tres en linea horizontal y tres en linea vertical 
-            //Podriamos usar incluso que las ileras que se borren agarramos las cordenadas en x que serian fijas y asignariamos...
-            //...los valores en "y" 1 inmediatamente si el 3 en linea fue horizontal y 3 si fue verticcal, ahora los valores vacios de arriba...
-            //..les asignamos un valor aleatorio
-
-            //Tendriamos una matriz fija de 8x8, donde usariamos 64 botones cada uno asignado a una coodenada, la cual se encargara de evaluar arriba, abajo, izquierda, derecha
-
-
-
-
-        }
-
-
-
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            pintarTablero();      
-        }
-
-
 
 
         private Image seleccionarRecursoCaramelo(int recurso)   //Retorna imagenes
@@ -115,8 +58,10 @@ namespace Candy
                     return global::Candy.Properties.Resources._3;
                 case 4:
                     return global::Candy.Properties.Resources._4;
-                default:
+                case 5:
                     return global::Candy.Properties.Resources._5;
+                default:
+                    return global::Candy.Properties.Resources._6;
             }
         }
 
@@ -220,7 +165,7 @@ namespace Candy
         {
             int[] vectorNumeros = new int[numbtn];      //Este vector almacena todos los numeros de las coordenadas seleccionadas para comparar si son iguales y ver si hay 3 en linea
 
-            for (int i =0; i<numbtn; i++)   //Este ciclo se encaragara de comporbar que las coordenadas en en tablero de numeros sean las mismas
+            for (int i =0; i<numbtn; i++)   //Este ciclo se encaragará de comprobar que las coordenadas en en tablero de numeros sean las mismas
             {           
                     int coordenadax = matrizPosiciones[i, 0];
                     int coordenaday = matrizPosiciones[i, 1];
@@ -236,6 +181,24 @@ namespace Candy
             if (linea)
             {
                 MessageBox.Show("Si hay 3 en linea");
+                // Asignar -1 a los elementos de la matriz tab.valores correspondientes a los botones seleccionados
+                for (int i = 0; i < numbtn; i++)
+                {
+                    int fila = matrizPosiciones[i, 0];
+                    int columna = matrizPosiciones[i, 1];
+
+                    tab.valores[fila, columna] = -1;
+
+                    // Obtener el botón correspondiente al índice en el TableLayoutPanel
+                    Button boton = matrizBotones[fila, columna];
+
+                    // Actualizar la imagen del botón
+                    boton.BackgroundImage = seleccionarRecursoCaramelo(-1);
+
+                }
+
+                // Actualizar la apariencia del TableLayoutPanel
+                matrizBform.Refresh();
             }
             else
             {
@@ -381,6 +344,7 @@ namespace Candy
                     if (comprobacion3)  //Caso en que si se cumplieron todas las condiciones anteriores por ende es 3 en linea
                     {
                         MessageBox.Show("Estan pegados");
+                       
                         return true;
                     }
                     else

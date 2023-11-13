@@ -29,23 +29,11 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.button1 = new System.Windows.Forms.Button();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.matrizBform = new System.Windows.Forms.TableLayoutPanel();
             this.VerificarButtom = new System.Windows.Forms.Button();
             this.buttonSALIR = new System.Windows.Forms.Button();
             this.SuspendLayout();
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(1019, 144);
-            this.button1.Margin = new System.Windows.Forms.Padding(4);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(100, 28);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // contextMenuStrip1
             // 
@@ -65,9 +53,8 @@
             this.matrizBform.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.matrizBform.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.matrizBform.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.matrizBform.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 543F));
-            this.matrizBform.Location = new System.Drawing.Point(36, 32);
-            this.matrizBform.Margin = new System.Windows.Forms.Padding(4);
+            this.matrizBform.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 407F));
+            this.matrizBform.Location = new System.Drawing.Point(27, 26);
             this.matrizBform.Name = "matrizBform";
             this.matrizBform.RowCount = 8;
             this.matrizBform.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -77,16 +64,17 @@
             this.matrizBform.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.matrizBform.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.matrizBform.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.matrizBform.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.matrizBform.Size = new System.Drawing.Size(543, 506);
+            this.matrizBform.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.matrizBform.Size = new System.Drawing.Size(407, 411);
             this.matrizBform.TabIndex = 67;
             this.matrizBform.Paint += new System.Windows.Forms.PaintEventHandler(this.matrizBform_Paint);
             // 
             // VerificarButtom
             // 
-            this.VerificarButtom.Location = new System.Drawing.Point(762, 113);
+            this.VerificarButtom.Location = new System.Drawing.Point(572, 92);
+            this.VerificarButtom.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.VerificarButtom.Name = "VerificarButtom";
-            this.VerificarButtom.Size = new System.Drawing.Size(110, 46);
+            this.VerificarButtom.Size = new System.Drawing.Size(82, 37);
             this.VerificarButtom.TabIndex = 68;
             this.VerificarButtom.Text = "VERIFICAR";
             this.VerificarButtom.UseVisualStyleBackColor = true;
@@ -94,9 +82,10 @@
             // 
             // buttonSALIR
             // 
-            this.buttonSALIR.Location = new System.Drawing.Point(762, 250);
+            this.buttonSALIR.Location = new System.Drawing.Point(572, 203);
+            this.buttonSALIR.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonSALIR.Name = "buttonSALIR";
-            this.buttonSALIR.Size = new System.Drawing.Size(128, 54);
+            this.buttonSALIR.Size = new System.Drawing.Size(96, 44);
             this.buttonSALIR.TabIndex = 69;
             this.buttonSALIR.Text = "SALIR";
             this.buttonSALIR.UseVisualStyleBackColor = true;
@@ -104,20 +93,18 @@
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.BackgroundImage = global::Candy.Properties.Resources.fondo;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(1176, 533);
+            this.ClientSize = new System.Drawing.Size(884, 440);
             this.Controls.Add(this.buttonSALIR);
             this.Controls.Add(this.VerificarButtom);
             this.Controls.Add(this.matrizBform);
-            this.Controls.Add(this.button1);
-            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(1194, 580);
-            this.MinimumSize = new System.Drawing.Size(1194, 580);
+            this.MaximumSize = new System.Drawing.Size(900, 479);
+            this.MinimumSize = new System.Drawing.Size(900, 479);
             this.Name = "Form1";
             this.Text = "Candy Crush";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -126,7 +113,6 @@
         }
 
         #endregion
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.TableLayoutPanel matrizBform;
         private System.Windows.Forms.Button VerificarButtom;
