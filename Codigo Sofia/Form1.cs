@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
 namespace Candy
 {
@@ -189,16 +190,30 @@ namespace Candy
 
                     tab.valores[fila, columna] = -1;
 
+
                     // Obtener el botón correspondiente al índice en el TableLayoutPanel
                     Button boton = matrizBotones[fila, columna];
 
                     // Actualizar la imagen del botón
                     boton.BackgroundImage = seleccionarRecursoCaramelo(-1);
-
+                    matrizBform.Refresh();
                 }
 
+                Cascada(tab.valores);
+                for (int rows = 7; rows >= 0; rows--)
+                {
+                    for (int  cols = 0; cols <=7; cols++)
+                    {
+                        Button botonF = matrizBotones[rows, cols];
+                        int caramelo = tab.valores[rows, cols];
+                        botonF.BackgroundImage = seleccionarRecursoCaramelo(caramelo); //Le asociamos una imagen al boton
+
+                        botonF.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+                    }
+                }
                 // Actualizar la apariencia del TableLayoutPanel
                 matrizBform.Refresh();
+
             }
             else
             {
@@ -355,6 +370,45 @@ namespace Candy
                 }
             }
         }   //Fin3enLinea
+    
+        public void Cascada(int[,] matPos)
+        {
+            Random random = new Random(); //Creamos un objeto random
+            //valid es prevenir que en caso de ser tres en vertical, el mas de abajo quede en -1
+            //lo que hace es simplemente pegarle una nueva revisada a toda la matriz 
+            for(int valid = 2;valid >0; valid--)
+            {
+                for (int i = 7; i >= 0; i--)
+                {
+                    for (int j = 0; j < 7; j++)
+                    {
+                        if (matPos[i, j] == -1)
+                        {
+                            int filaDestino = i;
+                            for (int m = i - 1; m >= 0; m--)
+                            {
+                                matPos[filaDestino, j] = matPos[m, j];
+                                matPos[m, j] = -2;
+                                filaDestino--;
+                            }
+                        }
+                        if (matPos[i,j] == -1 && i == 0)
+                        {
+                            matPos[i, j] = -2;
+                        }
+
+                        // aqui lo que hacemos es que se le asigne un valor nuevo a esas casillas que quedaron vacias "-2"
+                        if (matPos[i, j] == -2)
+                        {
+                            matPos[i, j] = random.Next(6);
+                        }
+                    }
+                }
+            }
+            
+            
+           
+        }
 
 
 
