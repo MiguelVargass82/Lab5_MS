@@ -87,34 +87,49 @@ namespace Candy
             matrizBform.ColumnCount = columnas;
 
             // Llena la matriz de botones y agrégala al TableLayoutPanel
-            for (int i = 0; i < filas; i++)
+             bool ban = true;
+            while ((EnlineaPosible(tab.valores)!=2)||ban)   //ciclo para que exixta almenos 3 en linea posibles de hacer
             {
-                for (int j = 0; j < columnas; j++)
+              
+                if(EnlineaPosible(tab.valores) == 2)
                 {
-                    //Logica para la asignacion de las imagenes a los botones
+                    for (int i = 0; i < filas; i++)
+                    {
+                        for (int j = 0; j < columnas; j++)
+                        {
+                            //Logica para la asignacion de las imagenes a los botones
 
-                    Button btn = new Button();      //Creamos un boton que sera parte de la matriz
-                    btn.FlatStyle = FlatStyle.Flat;
-                    btn.Size = new Size(45, 45);
-                    btn.BackColor = Color.Transparent;
-                    btn.Text = $"Boton {i }-{j}";
-                    int caramelo = tab.valores[i, j];   //Sacamos el numero de la matriz de numeros que pertenece a la posicion del boton
+                            Button btn = new Button();      //Creamos un boton que sera parte de la matriz
+                            btn.FlatStyle = FlatStyle.Flat;
+                            btn.Size = new Size(45, 45);
+                            btn.BackColor = Color.Transparent;
+                            btn.Text = $"Boton {i}-{j}";
+                            int caramelo = tab.valores[i, j];   //Sacamos el numero de la matriz de numeros que pertenece a la posicion del boton
 
-                    btn.Tag = new Tuple<int, int>(i, j);    //En la propiedad tag del boton alcamacena las coordenadas
+                            btn.Tag = new Tuple<int, int>(i, j);    //En la propiedad tag del boton alcamacena las coordenadas
 
-                    btn.BackgroundImage = seleccionarRecursoCaramelo(caramelo); //Le asociamos una imagen al boton
+                            btn.BackgroundImage = seleccionarRecursoCaramelo(caramelo); //Le asociamos una imagen al boton
 
-                    btn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+                            btn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
 
-                    matrizBotones[i, j] = btn;  //metemos en boton en la matriz
+                            matrizBotones[i, j] = btn;  //metemos en boton en la matriz
 
-                    // Asocia un evento al botón si es necesario
-                   // btn.Click += Boton_Click;
-                    btn.Click += (senderBtn, eBtn) => Boton_Click(senderBtn, eBtn, i, j);
-                    // Agrega el botón al TableLayoutPanel
-                    matrizBform.Controls.Add(btn, j, i);
+                            // Asocia un evento al botón si es necesario
+                            // btn.Click += Boton_Click;
+                            btn.Click += (senderBtn, eBtn) => Boton_Click(senderBtn, eBtn, i, j);
+                            // Agrega el botón al TableLayoutPanel
+                            matrizBform.Controls.Add(btn, j, i);
+                        }
+                    }
+                    ban = false;
                 }
-            }
+                else 
+                {
+                    tab.iniciarJuego(6);
+                  //  tab = new Tablero(8, 8, 6);
+
+                }
+            }    
         }
 
         int numbtn = 0; //Numero de botones a verificar
@@ -219,6 +234,17 @@ namespace Candy
             {
                 MessageBox.Show("No hay 3 en linea");
             }
+            if (EnlineaPosible(tab.valores) == 0)
+            {
+
+
+
+                MessageBox.Show("Aca se cierra el programa, porque no existe mas posibilidades de 3 en linea");
+
+
+
+            }
+            MessageBox.Show($"Posibles3enlinea son retorno: {EnlineaPosible(tab.valores)}");
 
             
 
@@ -410,6 +436,64 @@ namespace Candy
            
         }
 
+        public int EnlineaPosible(int[,] matrizNum)    //Esta funcion tiene como parametro la matriz de numeros y sirve para verificar que...
+        {                                             //...exista al menos un tres en linea, esta funcion solo puede tener tres retornos
+                                                      // 0-->No hay posiblidad de tres en linea   1-->Existe almenos uno   2-->Existe almenos 3
+
+            int cont = 0;
+            for (int i = 0; i < 8; i++) //Evaluaremos de manera horizontal 
+            {
+                for (int j = 0;j < 6; j++)
+                {
+                    if (matrizNum[i, j] == matrizNum[i, j + 1]) //el primero es igual al segundo
+                    {
+                        if (matrizNum[i, j+1] == matrizNum[i, j + 2])   //El segundo es igual al tercero
+                        {
+                            cont++; //posible tres en linea
+                        }
+                    }
+                }
+            }
+
+            for (int j = 0; j<8; j++)
+            {
+                for(int i = 0;i < 6; i++)
+                {
+                    if (matrizNum[i, j] == matrizNum[i + 1, j]) //El primero es igual al segundo
+                    {
+                        if (matrizNum[i+1,j] == matrizNum[i + 2, j])    //El segundo es igual al tercero
+                        {
+                            cont++; //posible tres en linea
+                        }
+                    }
+                }
+            }
+
+            if(cont == 0)   //Ninguna posibilidad de tres en linea
+            {
+                return 0;
+            }
+            else
+            {
+                if (cont < 3)   //Existe al menos uno pero menos de 3
+                {
+                    return 1;
+                }
+                else  //Existen almenos 3
+                {
+                    return 2;
+                }
+            }
+
+
+
+
+
+
+
+
+
+        }
 
 
 

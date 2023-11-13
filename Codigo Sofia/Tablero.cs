@@ -22,7 +22,7 @@ namespace Candy
             iniciarJuego(cantCaramelos);
         }
 
-        private void iniciarJuego(int cantCaramelos)    //Metodo de iniciar juego
+        public void iniciarJuego(int cantCaramelos)    //Metodo de iniciar juego
         {
             Random rand = new Random(); //Creamos un objeto random
 
