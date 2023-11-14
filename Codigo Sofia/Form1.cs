@@ -14,10 +14,13 @@ namespace Candy
 {
     public partial class Form1 : Form
     {
+        Form2 Form2 = new Form2();
         Tablero tab;    //Iniciamos una variable de clase tablero tablero
         Button[,] matrizBotones;
-
-        int[,] matrizPosiciones = new int[5,2];    //Matriz grande de maximo 5 coordenadas para verificar, cada coordenada x es un par
+        int puntaje = 0;
+        int casillas = 0;
+        int[,] matrizPosiciones = new int[5,2]; 
+        //Matriz grande de maximo 5 coordenadas para verificar, cada coordenada x es un par
 
 
 
@@ -103,7 +106,7 @@ namespace Candy
                             btn.FlatStyle = FlatStyle.Flat;
                             btn.Size = new Size(45, 45);
                             btn.BackColor = Color.Transparent;
-                            btn.Text = $"Boton {i}-{j}";
+                           
                             int caramelo = tab.valores[i, j];   //Sacamos el numero de la matriz de numeros que pertenece a la posicion del boton
 
                             btn.Tag = new Tuple<int, int>(i, j);    //En la propiedad tag del boton alcamacena las coordenadas
@@ -190,13 +193,13 @@ namespace Candy
 
                 //  MessageBox.Show($"coordenada X y Y del boton seleccionado son {coordenadax} y {coordenaday}"); verificador de que ya recolectamos las coordenadas
 
-                MessageBox.Show($"En la matriz de numeros es {vectorNumeros[i]}");
+                //MessageBox.Show($"En la matriz de numeros es {vectorNumeros[i]}");
             }
 
             bool linea = EnLinea(Horientacion(matrizPosiciones),matrizPosiciones,vectorNumeros);
             if (linea)
             {
-                MessageBox.Show("Si hay 3 en linea");
+                //MessageBox.Show("Si hay 3 en linea");
                 // Asignar -1 a los elementos de la matriz tab.valores correspondientes a los botones seleccionados
                 for (int i = 0; i < numbtn; i++)
                 {
@@ -207,14 +210,29 @@ namespace Candy
 
 
                     // Obtener el botón correspondiente al índice en el TableLayoutPanel
-                    Button boton = matrizBotones[fila, columna];
+                    //Button boton = matrizBotones[fila, columna];
 
                     // Actualizar la imagen del botón
-                    boton.BackgroundImage = seleccionarRecursoCaramelo(-1);
-                    matrizBform.Refresh();
+                    //boton.BackgroundImage = seleccionarRecursoCaramelo(-1);
+                    
                 }
 
                 Cascada(tab.valores);
+                switch (casillas)
+                {
+                    case 3:
+                        puntaje = puntaje + 6;
+                        break;
+                    case 4:
+                        puntaje = puntaje + 10;
+                        break;
+                    default : 
+                        puntaje = puntaje + 15;
+                        break;
+                }
+                Score.Text = puntaje.ToString();
+                casillas = 0;
+                // aqui es para que se refresque con las nuevas celdas
                 for (int rows = 7; rows >= 0; rows--)
                 {
                     for (int  cols = 0; cols <=7; cols++)
@@ -233,18 +251,20 @@ namespace Candy
             else
             {
                 MessageBox.Show("No hay 3 en linea");
+                puntaje = puntaje - 5;
+                Score.Text = puntaje.ToString();
             }
             if (EnlineaPosible(tab.valores) == 0)
             {
 
 
-
-                MessageBox.Show("Aca se cierra el programa, porque no existe mas posibilidades de 3 en linea");
-
+                Form2.StartPosition = FormStartPosition.CenterScreen;
+                //MessageBox.Show("Aca se cierra el programa, porque no existe mas posibilidades de 3 en linea");
+                Form2.Show();
 
 
             }
-            MessageBox.Show($"Posibles3enlinea son retorno: {EnlineaPosible(tab.valores)}");
+           // MessageBox.Show($"Posibles3enlinea con retorno: {EnlineaPosible(tab.valores)}");
 
             
 
@@ -308,7 +328,7 @@ namespace Candy
 
             if(!comprobacion) //caso donde no esten todos en la misma horientacion por ende no es 3 en linea
             {
-                MessageBox.Show("La primera comprobacion es falsa");
+                //MessageBox.Show("La primera comprobacion es falsa");
                 return false;
                 
             }
@@ -384,13 +404,13 @@ namespace Candy
 
                     if (comprobacion3)  //Caso en que si se cumplieron todas las condiciones anteriores por ende es 3 en linea
                     {
-                        MessageBox.Show("Estan pegados");
+                        //MessageBox.Show("Estan pegados");
                        
                         return true;
                     }
                     else
                     {
-                        MessageBox.Show("No estan pegados");
+                        //MessageBox.Show("No estan pegados");
                         return false;
                     }
                 }
@@ -402,14 +422,15 @@ namespace Candy
             Random random = new Random(); //Creamos un objeto random
             //valid es prevenir que en caso de ser tres en vertical, el mas de abajo quede en -1
             //lo que hace es simplemente pegarle una nueva revisada a toda la matriz 
-            for(int valid = 2;valid >0; valid--)
+            for(int valid = 3 ;valid >0; valid--)
             {
                 for (int i = 7; i >= 0; i--)
                 {
-                    for (int j = 0; j < 7; j++)
+                    for (int j = 0; j <= 7; j++)
                     {
                         if (matPos[i, j] == -1)
                         {
+                            casillas++;
                             int filaDestino = i;
                             for (int m = i - 1; m >= 0; m--)
                             {
@@ -418,8 +439,10 @@ namespace Candy
                                 filaDestino--;
                             }
                         }
+                        // este if es para asegurarnos que si sale un tres en linea en la fila 0 tambien lo cambie
                         if (matPos[i,j] == -1 && i == 0)
                         {
+                            casillas++;
                             matPos[i, j] = -2;
                         }
 
@@ -497,7 +520,8 @@ namespace Candy
 
 
 
-
+        //Notas Santiago: TOca solucionar que cuando se seleccionen solo dos o uno no permita que haya tres en linea
+        // esta sucediendo eso
 
 
 
@@ -513,6 +537,21 @@ namespace Candy
         // doble click en el forms xd
         private void button3_Click(object sender, EventArgs e)
         {          
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+            buttonSALIR.PerformClick();
+        }
+
+        private void pictureBox3_Click(object sender, EventArgs e)
+        {
+            VerificarButtom.PerformClick();
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+         
         }
         /////////////////////////////////////////////////////////////////////////
 
