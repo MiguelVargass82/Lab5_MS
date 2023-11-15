@@ -182,91 +182,99 @@ namespace Candy
 
         private void VerificarButtom_Click(object sender, EventArgs e)  //Evento de BOTON VERIFICAR
         {
-            int[] vectorNumeros = new int[numbtn];      //Este vector almacena todos los numeros de las coordenadas seleccionadas para comparar si son iguales y ver si hay 3 en linea
+            if (numbtn >= 3)
+            {
+                int[] vectorNumeros = new int[numbtn];      //Este vector almacena todos los numeros de las coordenadas seleccionadas para comparar si son iguales y ver si hay 3 en linea
 
-            for (int i =0; i<numbtn; i++)   //Este ciclo se encaragará de comprobar que las coordenadas en en tablero de numeros sean las mismas
-            {           
+                for (int i = 0; i < numbtn; i++)   //Este ciclo se encaragará de comprobar que las coordenadas en en tablero de numeros sean las mismas
+                {
                     int coordenadax = matrizPosiciones[i, 0];
                     int coordenaday = matrizPosiciones[i, 1];
 
-                vectorNumeros[i] = tab.valores[coordenadax,coordenaday];
+                    vectorNumeros[i] = tab.valores[coordenadax, coordenaday];
 
-                //  MessageBox.Show($"coordenada X y Y del boton seleccionado son {coordenadax} y {coordenaday}"); verificador de que ya recolectamos las coordenadas
+                    //  MessageBox.Show($"coordenada X y Y del boton seleccionado son {coordenadax} y {coordenaday}"); verificador de que ya recolectamos las coordenadas
 
-                //MessageBox.Show($"En la matriz de numeros es {vectorNumeros[i]}");
-            }
-
-            bool linea = EnLinea(Horientacion(matrizPosiciones),matrizPosiciones,vectorNumeros);
-            if (linea)
-            {
-                //MessageBox.Show("Si hay 3 en linea");
-                // Asignar -1 a los elementos de la matriz tab.valores correspondientes a los botones seleccionados
-                for (int i = 0; i < numbtn; i++)
-                {
-                    int fila = matrizPosiciones[i, 0];
-                    int columna = matrizPosiciones[i, 1];
-
-                    tab.valores[fila, columna] = -1;
-
-
-                    // Obtener el botón correspondiente al índice en el TableLayoutPanel
-                    //Button boton = matrizBotones[fila, columna];
-
-                    // Actualizar la imagen del botón
-                    //boton.BackgroundImage = seleccionarRecursoCaramelo(-1);
-                    
+                    //MessageBox.Show($"En la matriz de numeros es {vectorNumeros[i]}");
                 }
 
-                Cascada(tab.valores);
-                switch (casillas)
+                bool linea = EnLinea(Horientacion(matrizPosiciones), matrizPosiciones, vectorNumeros);
+                if (linea)
                 {
-                    case 3:
-                        puntaje = puntaje + 6;
-                        break;
-                    case 4:
-                        puntaje = puntaje + 10;
-                        break;
-                    default : 
-                        puntaje = puntaje + 15;
-                        break;
-                }
-                Score.Text = puntaje.ToString();
-                casillas = 0;
-                // aqui es para que se refresque con las nuevas celdas
-                for (int rows = 7; rows >= 0; rows--)
-                {
-                    for (int  cols = 0; cols <=7; cols++)
+                    //MessageBox.Show("Si hay 3 en linea");
+                    // Asignar -1 a los elementos de la matriz tab.valores correspondientes a los botones seleccionados
+                    for (int i = 0; i < numbtn; i++)
                     {
-                        Button botonF = matrizBotones[rows, cols];
-                        int caramelo = tab.valores[rows, cols];
-                        botonF.BackgroundImage = seleccionarRecursoCaramelo(caramelo); //Le asociamos una imagen al boton
+                        int fila = matrizPosiciones[i, 0];
+                        int columna = matrizPosiciones[i, 1];
 
-                        botonF.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+                        tab.valores[fila, columna] = -1;
+
+
+                        // Obtener el botón correspondiente al índice en el TableLayoutPanel
+                        //Button boton = matrizBotones[fila, columna];
+
+                        // Actualizar la imagen del botón
+                        //boton.BackgroundImage = seleccionarRecursoCaramelo(-1);
+
                     }
+
+                    Cascada(tab.valores);
+                    switch (casillas)
+                    {
+                        case 3:
+                            puntaje = puntaje + 6;
+                            break;
+                        case 4:
+                            puntaje = puntaje + 10;
+                            break;
+                        default:
+                            puntaje = puntaje + 15;
+                            break;
+                    }
+                    Score.Text = puntaje.ToString();
+                    casillas = 0;
+                    // aqui es para que se refresque con las nuevas celdas
+                    for (int rows = 7; rows >= 0; rows--)
+                    {
+                        for (int cols = 0; cols <= 7; cols++)
+                        {
+                            Button botonF = matrizBotones[rows, cols];
+                            int caramelo = tab.valores[rows, cols];
+                            botonF.BackgroundImage = seleccionarRecursoCaramelo(caramelo); //Le asociamos una imagen al boton
+
+                            botonF.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+                        }
+                    }
+                    // Actualizar la apariencia del TableLayoutPanel
+                    matrizBform.Refresh();
+
                 }
-                // Actualizar la apariencia del TableLayoutPanel
-                matrizBform.Refresh();
+                else
+                {
+                    MessageBox.Show("No hay 3 en linea");
+                    puntaje = puntaje - 5;
+                    Score.Text = puntaje.ToString();
+                }
+                if (EnlineaPosible(tab.valores) == 0)
+                {
+
+
+                    Form2.StartPosition = FormStartPosition.CenterScreen;
+                    //MessageBox.Show("Aca se cierra el programa, porque no existe mas posibilidades de 3 en linea");
+                    Form2.Show();
+
+
+                }
+                // MessageBox.Show($"Posibles3enlinea con retorno: {EnlineaPosible(tab.valores)}");
 
             }
             else
             {
-                MessageBox.Show("No hay 3 en linea");
-                puntaje = puntaje - 5;
-                Score.Text = puntaje.ToString();
+                MessageBox.Show("Deben haber minimo tres caramelos seleccionados ");
             }
-            if (EnlineaPosible(tab.valores) == 0)
-            {
 
 
-                Form2.StartPosition = FormStartPosition.CenterScreen;
-                //MessageBox.Show("Aca se cierra el programa, porque no existe mas posibilidades de 3 en linea");
-                Form2.Show();
-
-
-            }
-           // MessageBox.Show($"Posibles3enlinea con retorno: {EnlineaPosible(tab.valores)}");
-
-            
 
             numbtn =0;   //Volvemos cero este contador para que vuelva a contar las varibles          
         }//Fin evento VERIFICAR
