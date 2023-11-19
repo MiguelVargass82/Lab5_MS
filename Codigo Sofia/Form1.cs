@@ -268,7 +268,7 @@ namespace Candy
                 }
                 // MessageBox.Show($"Posibles3enlinea con retorno: {EnlineaPosible(tab.valores)}");
 
-            }
+            },..,ñ
             else
             {
                 MessageBox.Show("Deben haber minimo tres caramelos seleccionados ");

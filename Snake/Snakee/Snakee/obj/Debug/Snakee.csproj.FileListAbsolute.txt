@@ -1,0 +1,10 @@
+C:\Users\HP\Documents\GitHub\Lab5_MS\Snake\Snakee\Snakee\bin\Debug\Snakee.exe.config
+C:\Users\HP\Documents\GitHub\Lab5_MS\Snake\Snakee\Snakee\bin\Debug\Snakee.exe
+C:\Users\HP\Documents\GitHub\Lab5_MS\Snake\Snakee\Snakee\bin\Debug\Snakee.pdb
+C:\Users\HP\Documents\GitHub\Lab5_MS\Snake\Snakee\Snakee\obj\Debug\Snakee.csproj.AssemblyReference.cache
+C:\Users\HP\Documents\GitHub\Lab5_MS\Snake\Snakee\Snakee\obj\Debug\Snakee.Form1.resources
+C:\Users\HP\Documents\GitHub\Lab5_MS\Snake\Snakee\Snakee\obj\Debug\Snakee.Properties.Resources.resources
+C:\Users\HP\Documents\GitHub\Lab5_MS\Snake\Snakee\Snakee\obj\Debug\Snakee.csproj.GenerateResource.cache
+C:\Users\HP\Documents\GitHub\Lab5_MS\Snake\Snakee\Snakee\obj\Debug\Snakee.csproj.CoreCompileInputs.cache
+C:\Users\HP\Documents\GitHub\Lab5_MS\Snake\Snakee\Snakee\obj\Debug\Snakee.exe
+C:\Users\HP\Documents\GitHub\Lab5_MS\Snake\Snakee\Snakee\obj\Debug\Snakee.pdb
