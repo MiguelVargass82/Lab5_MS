@@ -27,5 +27,15 @@ namespace Candy
             formu1.Show();
           
         }
+
+        private void Form3_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
