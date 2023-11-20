@@ -8,3 +8,13 @@ C:\Users\HP\Documents\GitHub\Lab5_MS\Snake\Snakee\Snakee\obj\Debug\Snakee.csproj
 C:\Users\HP\Documents\GitHub\Lab5_MS\Snake\Snakee\Snakee\obj\Debug\Snakee.csproj.CoreCompileInputs.cache
 C:\Users\HP\Documents\GitHub\Lab5_MS\Snake\Snakee\Snakee\obj\Debug\Snakee.exe
 C:\Users\HP\Documents\GitHub\Lab5_MS\Snake\Snakee\Snakee\obj\Debug\Snakee.pdb
+C:\Users\migue\Desktop\UdeA\3er Semestre\Logica y representacion I\Laboratorio 4\Repositorio\Lab5_MS\Snake\Snakee\Snakee\bin\Debug\Snakee.exe.config
+C:\Users\migue\Desktop\UdeA\3er Semestre\Logica y representacion I\Laboratorio 4\Repositorio\Lab5_MS\Snake\Snakee\Snakee\bin\Debug\Snakee.exe
+C:\Users\migue\Desktop\UdeA\3er Semestre\Logica y representacion I\Laboratorio 4\Repositorio\Lab5_MS\Snake\Snakee\Snakee\bin\Debug\Snakee.pdb
+C:\Users\migue\Desktop\UdeA\3er Semestre\Logica y representacion I\Laboratorio 4\Repositorio\Lab5_MS\Snake\Snakee\Snakee\obj\Debug\Snakee.csproj.AssemblyReference.cache
+C:\Users\migue\Desktop\UdeA\3er Semestre\Logica y representacion I\Laboratorio 4\Repositorio\Lab5_MS\Snake\Snakee\Snakee\obj\Debug\Snakee.Form1.resources
+C:\Users\migue\Desktop\UdeA\3er Semestre\Logica y representacion I\Laboratorio 4\Repositorio\Lab5_MS\Snake\Snakee\Snakee\obj\Debug\Snakee.Properties.Resources.resources
+C:\Users\migue\Desktop\UdeA\3er Semestre\Logica y representacion I\Laboratorio 4\Repositorio\Lab5_MS\Snake\Snakee\Snakee\obj\Debug\Snakee.csproj.GenerateResource.cache
+C:\Users\migue\Desktop\UdeA\3er Semestre\Logica y representacion I\Laboratorio 4\Repositorio\Lab5_MS\Snake\Snakee\Snakee\obj\Debug\Snakee.csproj.CoreCompileInputs.cache
+C:\Users\migue\Desktop\UdeA\3er Semestre\Logica y representacion I\Laboratorio 4\Repositorio\Lab5_MS\Snake\Snakee\Snakee\obj\Debug\Snakee.exe
+C:\Users\migue\Desktop\UdeA\3er Semestre\Logica y representacion I\Laboratorio 4\Repositorio\Lab5_MS\Snake\Snakee\Snakee\obj\Debug\Snakee.pdb

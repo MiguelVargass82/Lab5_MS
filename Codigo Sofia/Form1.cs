@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,7 +20,12 @@ namespace Candy
         Button[,] matrizBotones;
         int puntaje = 0;
         int casillas = 0;
-        int[,] matrizPosiciones = new int[5,2]; 
+        int[,] matrizPosiciones = new int[5,2];
+        public String username {  get; set; }
+        public bool registrado;
+
+        public Dictionary<string, string[]> dicJugadores;
+
         //Matriz grande de maximo 5 coordenadas para verificar, cada coordenada x es un par
 
 
@@ -31,18 +37,13 @@ namespace Candy
             //Mi objeto tablero
 
             tab = new Tablero(8, 8, 6);     //tablero 8x8 de 6 tipos de caramelos
-            
+      
+
         }
        
 
         //-----NOTAS DE MIGUEL--------
         //Si queremos acceder a la matriz de numeros entonces vamos usar tab.valores y a la matriz de imagenes vamos a usar MatPictureBox
-
-        //Dos funciones (1) Tres en linea horizontal y tres en linea vertical 
-        //Podriamos usar incluso que las ileras que se borren agarramos las cordenadas en x que serian fijas y asignariamos...
-        //...los valores en "y" 1 inmediatamente si el 3 en linea fue horizontal y 3 si fue verticcal, ahora los valores vacios de arriba...
-        //..les asignamos un valor aleatorio
-
         //Tendriamos una matriz fija de 8x8, donde usariamos 64 botones cada uno asignado a una coodenada, la cual se encargara de evaluar arriba, abajo, izquierda, derecha
 
             
@@ -91,7 +92,7 @@ namespace Candy
 
             // Llena la matriz de botones y agrégala al TableLayoutPanel
              bool ban = true;
-            while ((EnlineaPosible(tab.valores)!=2)||ban)   //ciclo para que exixta almenos 3 en linea posibles de hacer
+            while ((EnlineaPosible(tab.valores)!=2)||ban)   //ciclo para que exista almenos 3 en linea posibles de hacer
             {
               
                 if(EnlineaPosible(tab.valores) == 2)
@@ -141,14 +142,10 @@ namespace Candy
         int PosicionY = 0;  //Posicion X y Y  para la matriz de coordenadas
         private void Boton_Click(object sender, EventArgs e, int fila, int columna)    //Evento de cualquier boton de la matriz
         {
-
+         
                          
             if (sender is Button clickedButton)
-            {
-             
-
-                
-
+            {            
               //  MessageBox.Show($"Se hizo clic en el botón en la fila {filaa + 1}, columna {columnaa + 1}.");
 
                 if (numbtn < 5)  
@@ -168,14 +165,9 @@ namespace Candy
                 }
                 
                 else  //Caso en que los botones seleccionados sean menor a 3 o mayor a 5
-                {
-                   
-                  
-                        MessageBox.Show("No puede haber mas de 5 caramelos seleccionados");
-                                  
+                {                                     
+                        MessageBox.Show("No puede haber mas de 5 caramelos seleccionados");                                  
                 }
-
-
             }
         }
 
@@ -222,7 +214,7 @@ namespace Candy
                     Cascada(tab.valores);
                     switch (casillas)
                     {
-                        case 3:
+                        case 3:     //variacion de los puntajes
                             puntaje = puntaje + 6;
                             break;
                         case 4:
@@ -232,7 +224,7 @@ namespace Candy
                             puntaje = puntaje + 15;
                             break;
                     }
-                    Score.Text = puntaje.ToString();
+                    Score.Text = puntaje.ToString(); //Mostramos los puntajes en el forms
                     casillas = 0;
                     // aqui es para que se refresque con las nuevas celdas
                     for (int rows = 7; rows >= 0; rows--)
@@ -256,19 +248,39 @@ namespace Candy
                     puntaje = puntaje - 5;
                     Score.Text = puntaje.ToString();
                 }
-                if (EnlineaPosible(tab.valores) == 0)
+                if (EnlineaPosible(tab.valores) == 0)   //Caso en el que acaba el juego
                 {
-
-
                     Form2.StartPosition = FormStartPosition.CenterScreen;
-                    //MessageBox.Show("Aca se cierra el programa, porque no existe mas posibilidades de 3 en linea");
+                    
                     Form2.Show();
 
+                    Dictionary<string, string[]> dicJugadores = DicSesion();   //dicJugadores sera la variable que contiene el diccionario
+                    List<string> listaDeJugadores = new List<string>(dicJugadores.Keys);
 
-                }
-                // MessageBox.Show($"Posibles3enlinea con retorno: {EnlineaPosible(tab.valores)}");
+                    DateTime fechaHoraActual = DateTime.Now;              
+                    string cadenaFechaHora = fechaHoraActual.ToString("yyyy-MM-dd HH:mm:ss");   //Fecha y hora en string
 
-            },..,ñ
+                    if (listaDeJugadores.Contains(username))     //Caso en que ya exista en el txt
+                    {
+                        string puntajeDic = dicJugadores[username][0];
+                        int puntajeDicI = int.Parse(puntajeDic);
+
+                        if(puntaje > puntajeDicI)   //Si el puntaje del obtenido es mayor que el del diccionario
+                        {
+                            dicJugadores[username][0] = puntaje.ToString();
+                            dicJugadores[username][1] = cadenaFechaHora;
+                        }
+                    }
+                    else //No existe en el TXT
+                    {
+                        dicJugadores.Add(username,new string[] {puntaje.ToString(),cadenaFechaHora});
+                    }
+                    LimpiarArchivo("Archivo.txt");
+                    EscribirDiccionarioEnArchivo(dicJugadores,"Archivo.txt");
+                   
+
+                }           
+            }
             else
             {
                 MessageBox.Show("Deben haber minimo tres caramelos seleccionados ");
@@ -313,7 +325,7 @@ namespace Candy
                     if (matPos[i, 0] != valorBase)   //caso donde haya un valor que no este en esa fila
                     {
                         comprobacion = false;
-                        MessageBox.Show($"Valor base {valorBase} y valor malo es {matPos[i, 0]}");
+                       
                         MessageBox.Show("Hay uno que no esta en la misma fila horizontal");
 
                     }
@@ -356,7 +368,7 @@ namespace Candy
 
                 if (!comprobacion2) //Caso hay un valor que no es igual
                 {
-                    MessageBox.Show(" Hay un valor diferente en la matriz de numeros");
+                   // MessageBox.Show(" Hay un valor diferente en la matriz de numeros");
                     return false;
 
                 }
@@ -516,20 +528,179 @@ namespace Candy
                 }
             }
 
+        }
 
 
+        //FUNCIONES DE INICIO DE SESION
+        public Dictionary<string, string[]>  DicSesion()
+        {
+            Dictionary<string, string[]> datosUsuarios = new Dictionary<string, string[]>();
+            try
+            {
+                // Obtener el directorio del archivo ejecutable
+                string directorioActual = AppDomain.CurrentDomain.BaseDirectory;
+
+                // Combinar el directorio con el nombre del archivo
+                string rutaArchivo = Path.Combine(directorioActual, "Archivo.txt");
+
+                // Crear un diccionario para almacenar los datos
+                
+                // Leer todas las líneas del archivo
+                string[] lineas = File.ReadAllLines(rutaArchivo);
+
+                // Procesar cada línea del archivo
+                foreach (string linea in lineas)
+                {
+
+                    // Dividir la línea en partes utilizando el punto y coma como separador
+                    string[] partes = linea.Split(';');
+
+                    // Verificar si la línea tiene el formato esperado
+                    if (partes.Length == 3)
+                    {
+                        // Obtener los valores de la línea
+                        string nombreUsuario = partes[0];
+                        string fechaHora = partes[2];
+                        string ultimoNumero = partes[1];
+
+                        // Crear un vector con la fecha y hora y el último número
+                        string[] datosUsuario = { ultimoNumero, fechaHora };
+
+                        // Agregar al diccionario
+                        datosUsuarios.Add(nombreUsuario, datosUsuario);
+                        
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Formato incorrecto en la línea: {linea}");
+                    }
+
+                }
+                return datosUsuarios;
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al leer el archivo: {ex.Message}");
+                return datosUsuarios;
+            }
+
+        }
+
+        public void EscribirDiccionarioEnArchivo(Dictionary<string, string[]> datos, string nombreArchivo)
+        {
+            try
+            {
+
+                // Crear o agregar al final del archivo
+                using (StreamWriter escritor = new StreamWriter(nombreArchivo, true))
+                {
+                    // Escribir cada entrada del diccionario en el archivo
+                    foreach (var parClaveValor in datos)
+                    {
+                        // Formatear la línea como "fecha;usuario;fecha_y_hora"
+                        string linea = $"{parClaveValor.Key};{parClaveValor.Value[0]};{parClaveValor.Value[1]}";
+                        escritor.WriteLine(linea);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al leer el archivo: {ex.Message}");
+            }
+        }
 
 
+        public void LimpiarArchivo(string nombreArchivo)
+        {
+            try
+            {
+                // Crear o agregar al final del archivo
+                using (StreamWriter escritor = new StreamWriter(nombreArchivo))
+                {
+                    // Escribir cada entrada del diccionario en el archivo                
+                        escritor.WriteLine("");                    
+                }
 
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al leer el archivo: {ex.Message}");
+            }
+        }
 
+        public string[] ObtenerClavesOrdenadas(Dictionary<string, string[]> diccionario)    //Retorna una lista con las claves ordenadas en base al segundo parametro
+        {
+            // Ordenar las claves según el valor numérico de string2
+            string[] clavesOrdenadas = diccionario.Keys.OrderByDescending(clave =>
+            {
+                if (int.TryParse(diccionario[clave][0], out int valorNumerico))
+                {
+                    return valorNumerico;
+                }
+                else
+                {
+                    // Manejar el caso en el que el valor de string2 no sea un número válido
+                    // Puedes ajustar esto según tus requisitos (por ejemplo, tratando el error o asignando un valor predeterminado)
+                    return 0;
+                }
+            }).ToArray();
 
-
+            return clavesOrdenadas;
         }
 
 
 
-        //Notas Santiago: TOca solucionar que cuando se seleccionen solo dos o uno no permita que haya tres en linea
-        // esta sucediendo eso
+        private void button1_Click(object sender, EventArgs e)  //Boton de mejores puntajes
+        {
+            Dictionary<string, string[]> dicJugadores = DicSesion();
+            string[] claves = ObtenerClavesOrdenadas(dicJugadores);
+            Form4 puntajesForm = new Form4();
+            switch (claves.Length)
+            {
+                case 1:
+                    puntajesForm.textNum1.Text = $"Username:{claves[0]}     puntaje:{dicJugadores[claves[0]][0]}   Fecha:{dicJugadores[claves[0]][1]} ";
+                    break;
+                case 2:
+                    puntajesForm.textNum1.Text = $"Username:{claves[0]}     puntaje:{dicJugadores[claves[0]][0]}   Fecha:{dicJugadores[claves[0]][1]} ";
+                    puntajesForm.textNum2.Text = $"Username:{claves[1]}     puntaje:{dicJugadores[claves[1]][0]}   Fecha:{dicJugadores[claves[1]][1]} ";
+                    break;
+                case 3:
+                    puntajesForm.textNum1.Text = $"Username:{claves[0]}     puntaje:{dicJugadores[claves[0]][0]}   Fecha:{dicJugadores[claves[0]][1]} ";
+                    puntajesForm.textNum2.Text = $"Username:{claves[1]}     puntaje:{dicJugadores[claves[1]][0]}   Fecha:{dicJugadores[claves[1]][1]} ";
+                    puntajesForm.textNum3.Text = $"Username:{claves[2]}     puntaje:{dicJugadores[claves[2]][0]}   Fecha:{dicJugadores[claves[2]][1]} ";
+                    break;
+                case 4:
+
+                    puntajesForm.textNum1.Text = $"Username:{claves[0]}     puntaje:{dicJugadores[claves[0]][0]}   Fecha:{dicJugadores[claves[0]][1]} ";
+                    puntajesForm.textNum2.Text = $"Username:{claves[1]}     puntaje:{dicJugadores[claves[1]][0]}   Fecha:{dicJugadores[claves[1]][1]} ";
+                    puntajesForm.textNum3.Text = $"Username:{claves[2]}     puntaje:{dicJugadores[claves[2]][0]}   Fecha:{dicJugadores[claves[2]][1]} ";
+                    puntajesForm.textNum4.Text = $"Username:{claves[3]}     puntaje:{dicJugadores[claves[3]][0]}   Fecha:{dicJugadores[claves[3]][1]} ";
+                    break;
+                case 5:
+                    puntajesForm.textNum1.Text = $"Username:{claves[0]}     puntaje:{dicJugadores[claves[0]][0]}   Fecha:{dicJugadores[claves[0]][1]} ";
+                    puntajesForm.textNum2.Text = $"Username:{claves[1]}     puntaje:{dicJugadores[claves[1]][0]}   Fecha:{dicJugadores[claves[1]][1]} ";
+                    puntajesForm.textNum3.Text = $"Username:{claves[2]}     puntaje:{dicJugadores[claves[2]][0]}   Fecha:{dicJugadores[claves[2]][1]} ";
+                    puntajesForm.textNum4.Text = $"Username:{claves[3]}     puntaje:{dicJugadores[claves[3]][0]}   Fecha:{dicJugadores[claves[3]][1]} ";
+                    puntajesForm.textNum5.Text = $"Username:{claves[4]}     puntaje:{dicJugadores[claves[4]][0]}   Fecha:{dicJugadores[claves[4]][1]} ";
+                    break;
+            }
+
+          
+
+
+
+
+            puntajesForm.Show();
+        }
+
+
+
+
+
+
+
 
 
 
@@ -561,6 +732,13 @@ namespace Candy
         {
          
         }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+     
         /////////////////////////////////////////////////////////////////////////
 
     }
