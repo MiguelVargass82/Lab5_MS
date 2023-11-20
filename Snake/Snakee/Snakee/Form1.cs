@@ -23,8 +23,9 @@ namespace Snakee
         int maxAncho;
         int maxAlto;
 
-        int score;
+        int score;  //PUNTAJE
         int highScore;
+       public  string username;
         
         //llamamos un objeto random para definir luego la posicion de la manzana
         Random rand = new Random();
@@ -215,7 +216,7 @@ namespace Snakee
                 }
 
                 //le brinda este aspecto redondo al cuerpo de la serpiente
-                canvas.FillEllipse(snakeColor, new Rectangle(
+                canvas.FillRectangle(snakeColor, new Rectangle(
                     snake[i].x * gridSize,
                     snake[i].y * gridSize,
                     gridSize, gridSize));
@@ -248,6 +249,8 @@ namespace Snakee
             //mientras que se este jugando no se puede iniciar otro juego o salir
             iniciar.Enabled = false;
             button2.Enabled = false;
+            puntajesBtn.Enabled = false;
+
 
             score = 0;
             puntaje.Text = "Puntaje: " + score;
@@ -297,6 +300,7 @@ namespace Snakee
             tiempo.Stop();
             iniciar.Enabled = true;
             button2.Enabled = true;
+            puntajesBtn.Enabled = true;
             //sistema de mejor puntaje
             if (score > highScore)
             {
@@ -305,14 +309,230 @@ namespace Snakee
                 mejorPuntaje.ForeColor = Color.Maroon;
                 mejorPuntaje.TextAlign = ContentAlignment.MiddleCenter;
             }
+
+
+            Dictionary<string, string[]> dicJugadores = DicSesion();   //dicJugadores sera la variable que contiene el diccionario
+            List<string> listaDeJugadores = new List<string>(dicJugadores.Keys);
+
+            DateTime fechaHoraActual = DateTime.Now;  
+            string cadenaFechaHora = fechaHoraActual.ToString("yyyy-MM-dd HH:mm:ss");   //Fecha y hora en string
+
+            if (listaDeJugadores.Contains(username))     //Caso en que ya exista en el txt
+            {
+                string puntajeDic = dicJugadores[username][0];
+                int puntajeDicI = int.Parse(puntajeDic);
+                
+                if (score > puntajeDicI)   //Si el puntaje del obtenido es mayor que el del diccionario
+                {
+                    dicJugadores[username][0] = score.ToString();
+                    dicJugadores[username][1] = cadenaFechaHora;
+                }
+            }
+            else //No existe en el TXT
+            {
+                dicJugadores.Add(username, new string[] { score.ToString(), cadenaFechaHora });
+            }
+            LimpiarArchivo("Archivo.txt");
+            EscribirDiccionarioEnArchivo(dicJugadores, "Archivo.txt");
+
+
+
+
+
+
+
+
         }
+
+
+        //FUNCIONES DE INICIO DE SESION
+        public Dictionary<string, string[]> DicSesion()
+        {
+            Dictionary<string, string[]> datosUsuarios = new Dictionary<string, string[]>();
+            try
+            {
+                // Obtener el directorio del archivo ejecutable
+                string directorioActual = AppDomain.CurrentDomain.BaseDirectory;
+
+                // Combinar el directorio con el nombre del archivo
+                string rutaArchivo = Path.Combine(directorioActual, "Archivo.txt");
+
+                // Crear un diccionario para almacenar los datos
+
+                // Leer todas las líneas del archivo
+                string[] lineas = File.ReadAllLines(rutaArchivo);
+
+                // Procesar cada línea del archivo
+                foreach (string linea in lineas)
+                {
+
+                    // Dividir la línea en partes utilizando el punto y coma como separador
+                    string[] partes = linea.Split(';');
+
+                    // Verificar si la línea tiene el formato esperado
+                    if (partes.Length == 3)
+                    {
+                        // Obtener los valores de la línea
+                        string nombreUsuario = partes[0];
+                        string fechaHora = partes[2];
+                        string ultimoNumero = partes[1];
+
+                        // Crear un vector con la fecha y hora y el último número
+                        string[] datosUsuario = { ultimoNumero, fechaHora };
+
+                        // Agregar al diccionario
+                        datosUsuarios.Add(nombreUsuario, datosUsuario);
+
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Formato incorrecto en la línea: {linea}");
+                    }
+
+                }
+                return datosUsuarios;
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al leer el archivo: {ex.Message}");
+                return datosUsuarios;
+            }
+
+        }
+
+        public void EscribirDiccionarioEnArchivo(Dictionary<string, string[]> datos, string nombreArchivo)
+        {
+            try
+            {
+
+                // Crear o agregar al final del archivo
+                using (StreamWriter escritor = new StreamWriter(nombreArchivo, true))
+                {
+                    // Escribir cada entrada del diccionario en el archivo
+                    foreach (var parClaveValor in datos)
+                    {
+                        // Formatear la línea como "fecha;usuario;fecha_y_hora"
+                        string linea = $"{parClaveValor.Key};{parClaveValor.Value[0]};{parClaveValor.Value[1]}";
+                        escritor.WriteLine(linea);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al leer el archivo: {ex.Message}");
+            }
+        }
+
+
+        public void LimpiarArchivo(string nombreArchivo)
+        {
+            try
+            {
+                // Crear o agregar al final del archivo
+                using (StreamWriter escritor = new StreamWriter(nombreArchivo))
+                {
+                    // Escribir cada entrada del diccionario en el archivo                
+                    escritor.WriteLine("");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al leer el archivo: {ex.Message}");
+            }
+        }
+
+        public string[] ObtenerClavesOrdenadas(Dictionary<string, string[]> diccionario)    //Retorna una lista con las claves ordenadas en base al segundo parametro
+        {
+            // Ordenar las claves según el valor numérico de string2
+            string[] clavesOrdenadas = diccionario.Keys.OrderByDescending(clave =>
+            {
+                if (int.TryParse(diccionario[clave][0], out int valorNumerico))
+                {
+                    return valorNumerico;
+                }
+                else
+                {
+                    // Manejar el caso en el que el valor de string2 no sea un número válido
+                    // Puedes ajustar esto según tus requisitos (por ejemplo, tratando el error o asignando un valor predeterminado)
+                    return 0;
+                }
+            }).ToArray();
+
+            return clavesOrdenadas;
+        }
+
+
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Dictionary<string, string[]> dicJugadores = DicSesion();
+            string[] claves = ObtenerClavesOrdenadas(dicJugadores);
+            Form2 puntajesForm = new Form2();
+            switch (claves.Length)
+            {
+                case 1:
+                    puntajesForm.textNum1.Text = $"Username:{claves[0]}     puntaje:{dicJugadores[claves[0]][0]}   Fecha:{dicJugadores[claves[0]][1]} ";
+                    break;
+                case 2:
+                    puntajesForm.textNum1.Text = $"Username: {claves[0]}     puntaje:{dicJugadores[claves[0]][0]}   Fecha:{dicJugadores[claves[0]][1]} ";
+                    puntajesForm.textNum2.Text = $"Username: {claves[1]}     puntaje:{dicJugadores[claves[1]][0]}   Fecha:{dicJugadores[claves[1]][1]} ";
+                    break;
+                case 3:
+                    puntajesForm.textNum1.Text = $"Username: {claves[0]}     puntaje:{dicJugadores[claves[0]][0]}   Fecha:{dicJugadores[claves[0]][1]} ";
+                    puntajesForm.textNum2.Text = $"Username: {claves[1]}     puntaje:{dicJugadores[claves[1]][0]}   Fecha:{dicJugadores[claves[1]][1]} ";
+                    puntajesForm.textNum3.Text = $"Username: {claves[2]}     puntaje:{dicJugadores[claves[2]][0]}   Fecha:{dicJugadores[claves[2]][1]} ";
+                    break;
+                case 4:
+
+                    puntajesForm.textNum1.Text = $"Username: {claves[0]}     puntaje:{dicJugadores[claves[0]][0]}   Fecha:{dicJugadores[claves[0]][1]} ";
+                    puntajesForm.textNum2.Text = $"Username: {claves[1]}     puntaje:{dicJugadores[claves[1]][0]}   Fecha:{dicJugadores[claves[1]][1]} ";
+                    puntajesForm.textNum3.Text = $"Username: {claves[2]}     puntaje:{dicJugadores[claves[2]][0]}   Fecha:{dicJugadores[claves[2]][1]} ";
+                    puntajesForm.textNum4.Text = $"Username: {claves[3]}     puntaje:{dicJugadores[claves[3]][0]}   Fecha:{dicJugadores[claves[3]][1]} ";
+                    break;
+                case 5:
+                    puntajesForm.textNum1.Text = $"Username: {claves[0]}     puntaje:{dicJugadores[claves[0]][0]}   Fecha:{dicJugadores[claves[0]][1]} ";
+                    puntajesForm.textNum2.Text = $"Username: {claves[1]}     puntaje:{dicJugadores[claves[1]][0]}   Fecha:{dicJugadores[claves[1]][1]} ";
+                    puntajesForm.textNum3.Text = $"Username: {claves[2]}     puntaje:{dicJugadores[claves[2]][0]}   Fecha:{dicJugadores[claves[2]][1]} ";
+                    puntajesForm.textNum4.Text = $"Username: {claves[3]}     puntaje:{dicJugadores[claves[3]][0]}   Fecha:{dicJugadores[claves[3]][1]} ";
+                    puntajesForm.textNum5.Text = $"Username: {claves[4]}     puntaje:{dicJugadores[claves[4]][0]}   Fecha:{dicJugadores[claves[4]][1]} ";
+                    break;
+            }
+
+
+
+
+
+
+            puntajesForm.Show();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         //boton salir
         private void button2_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        //doble  click
+       
+
+        //doble  click////////////////////////////////////////////////////////////////////////77777
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
@@ -327,5 +547,5 @@ namespace Snakee
         {
 
         }
-    }
+    }////////////////////////////////////////////////////////////////////////////////
 }

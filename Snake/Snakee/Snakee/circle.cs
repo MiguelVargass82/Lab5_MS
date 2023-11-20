@@ -14,8 +14,8 @@ namespace Snakee
 
         public circle()
         {
-            x = 0;
-            y = 0;
+            x = 7;
+            y = 8;
         }
     }
 }
